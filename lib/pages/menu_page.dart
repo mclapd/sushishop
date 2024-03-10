@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sushishop/components/button.dart';
 import 'package:sushishop/components/food_tile.dart';
 import 'package:sushishop/models/food.dart';
+import 'package:sushishop/pages/food_details_page.dart';
 import 'package:sushishop/theme/colors.dart';
 
 class MenuPage extends StatefulWidget {
@@ -27,6 +28,17 @@ class _MenuPageState extends State<MenuPage> {
       rating: "4.9",
     ),
   ];
+
+  void navigateToFoodDetails(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FoodDetailsPage(
+          food: foodMenu[index],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +126,10 @@ class _MenuPageState extends State<MenuPage> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: foodMenu.length,
-              itemBuilder: (context, indext) =>
-                  FoodTile(food: foodMenu[indext]),
+              itemBuilder: (context, index) => FoodTile(
+                food: foodMenu[index],
+                onTap: () => navigateToFoodDetails(index),
+              ),
             ),
           ),
           const SizedBox(height: 25),
