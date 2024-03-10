@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:sushishop/components/button.dart';
 import 'package:sushishop/models/food.dart';
+import 'package:sushishop/models/shop.dart';
 import 'package:sushishop/theme/colors.dart';
 
 class FoodDetailsPage extends StatefulWidget {
@@ -14,21 +16,51 @@ class FoodDetailsPage extends StatefulWidget {
 }
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
-  int quantity = 0;
+  int quantityCount = 0;
 
   void descrementQuantity() {
     setState(() {
-      if (quantity > 0) quantity--;
+      if (quantityCount > 0) quantityCount--;
     });
   }
 
   void incrementQuantity() {
     setState(() {
-      quantity++;
+      quantityCount++;
     });
   }
 
-  void addToCart() {}
+  void addToCart() {
+    if (quantityCount > 0) {
+      final shop = context.read<Shop>();
+      shop.addToCart(widget.food, quantityCount);
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          backgroundColor: primaryColor,
+          content: const Text(
+            "Successfully added to cart",
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.done,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +157,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                           width: 40,
                           child: Center(
                             child: Text(
-                              quantity.toString(),
+                              quantityCount.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
